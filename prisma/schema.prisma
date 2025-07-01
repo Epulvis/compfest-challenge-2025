@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Model untuk Paket Makanan
+model MealPlan {
+  id                  Int      @id @default(autoincrement())
+  name                String   @unique
+  price               Float
+  description         String
+  image               String?
+  nutrition           Nutrition?
+  subscriptions       Subscription[]
+}
+
+// Model untuk Pengguna 
+model User {
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  fullName      String
+  password      String
+  role          String         @default("USER")
+  subscriptions Subscription[]
+  createdAt     DateTime       @default(now())
+}
+
+// Model untuk Langganan
+model Subscription {
+  id             Int       @id @default(autoincrement())
+  userId         Int
+  user           User      @relation(fields: [userId], references: [id])
+  mealPlanId     Int
+  mealPlan       MealPlan  @relation(fields: [mealPlanId], references: [id])
+  totalPrice     Float
+  status         String    @default("ACTIVE")
+  pauseStartDate DateTime?
+  pauseEndDate   DateTime?
+  createdAt      DateTime  @default(now())
+  selectedMealTypes   SubscriptionMealType[]
+  selectedDeliveryDays SubscriptionDeliveryDay[]
+}
+
+model SubscriptionMealType {
+  subscriptionId Int
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  mealType       String
+
+  @@id([subscriptionId, mealType])
+}
+
+model SubscriptionDeliveryDay {
+  subscriptionId Int
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  day            String
+
+  @@id([subscriptionId, day])
+}
+
+model Nutrition {
+  id          Int      @id @default(autoincrement())
+  kalori      String
+  protein     String
+  karbo       String
+  lemak       String
+  mealPlanId  Int      @unique
+  mealPlan    MealPlan @relation(fields: [mealPlanId], references: [id])
+}
