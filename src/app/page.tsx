@@ -1,3 +1,4 @@
+import ContactSection from "@/components/molecules/ContactSection";
 import Footer from "@/components/molecules/Footer";
 import HeroSection from "@/components/molecules/HeroSection"
 import ServicesSection from "@/components/molecules/ServicesSection"
@@ -9,6 +10,7 @@ export default function Home() {
       <HeroSection/>
       <ServicesSection/>
       <TestimonialsSection/>
+      <ContactSection/>
       <Footer/>
     </>
   );
